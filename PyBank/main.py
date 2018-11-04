@@ -27,9 +27,7 @@ with open(csvpath, "r") as pybank:
             if delta < decrease_delta:
                 decrease_delta = delta
                 month_name_dec = row[0]
-
-
-            
+           
 print("Financial Statement")
 print("----------------------------")
 print(f"Total Months: {months}")
@@ -37,3 +35,13 @@ print(f"Total ${profit_loss}")
 print(f"Average Change: ${round(ave_pl_change)}")
 print(f"Greatest Increase in Profits: {month_name_inc} (${increase_delta})")
 print(f"Greatest Decrease in Profits: {month_name_dec} (${decrease_delta})")
+
+file = open("PyBank.txt","w")
+file.write("Financial Statement\n")
+file.write("----------------------------\n")
+file.write(f"Total Months: {months}\n")
+file.write(f"Total ${profit_loss}\n")
+file.write(f"Average Change: ${round(ave_pl_change)}\n")
+file.write(f"Greatest Increase in Profits: {month_name_inc} (${increase_delta})\n")
+file.write(f"Greatest Decrease in Profits: {month_name_dec} (${decrease_delta})\n")
+file.close()    
