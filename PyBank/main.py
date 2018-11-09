@@ -5,33 +5,39 @@ csvpath = os.path.join("budget_data.csv")
 
 with open(csvpath, "r") as pybank:
     csvreader = csv.reader(pybank, delimiter=",") 
+    csv_header = next(csvreader)
 
     months = 0
-    profit_loss = int(0)
-    ave_pl_change = 0
+    total_profit_loss = 0
+    profit_loss = 0
     increase_delta = 0
     decrease_delta = 0
+    sum_delta = 0
+    prev_value = 0
+    ave_pl_change = 0
+    first_pl = 0
+    
+    for row in csvreader:
+        prev_value = prev_value
+        months = months + 1
+        profit_loss = int(row[1])
+        total_profit_loss = total_profit_loss + int(row[1])
+        delta = profit_loss - prev_value
+        sum_delta = sum_delta + delta
+        prev_value = int(row[1])
+        if delta > increase_delta:
+            increase_delta = delta
+            month_name_inc = row[0]
+        if delta < decrease_delta:
+            decrease_delta = delta
+            month_name_dec = row[0]      
 
-    for i, row in enumerate(csvreader):
-        if i == 0:
-            header = row
-        else:
-            months = months + 1
-            prev_val = profit_loss
-            profit_loss = profit_loss + int(row[1])
-            delta = profit_loss - prev_val
-            ave_pl_change = (ave_pl_change + delta) / months
-            if delta > increase_delta:
-                increase_delta = delta
-                month_name_inc = row[0]
-            if delta < decrease_delta:
-                decrease_delta = delta
-                month_name_dec = row[0]
-           
+    ave_pl_change = (sum_delta - first_pl) / months
+                  
 print("Financial Statement")
 print("----------------------------")
 print(f"Total Months: {months}")
-print(f"Total ${profit_loss}")
+print(f"Total ${total_profit_loss}")
 print(f"Average Change: ${round(ave_pl_change)}")
 print(f"Greatest Increase in Profits: {month_name_inc} (${increase_delta})")
 print(f"Greatest Decrease in Profits: {month_name_dec} (${decrease_delta})")
@@ -40,7 +46,7 @@ file = open("PyBank.txt","w")
 file.write("Financial Statement\n")
 file.write("----------------------------\n")
 file.write(f"Total Months: {months}\n")
-file.write(f"Total ${profit_loss}\n")
+file.write(f"Total ${total_profit_loss}\n")
 file.write(f"Average Change: ${round(ave_pl_change)}\n")
 file.write(f"Greatest Increase in Profits: {month_name_inc} (${increase_delta})\n")
 file.write(f"Greatest Decrease in Profits: {month_name_dec} (${decrease_delta})\n")
