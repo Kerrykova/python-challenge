@@ -15,9 +15,10 @@ with open(csvpath, "r") as pybank:
     sum_delta = 0
     prev_value = 0
     ave_pl_change = 0
-    first_pl = 0
+    first_pl = []
     
     for row in csvreader:
+        first_pl.append(row[1])
         prev_value = prev_value
         months = months + 1
         profit_loss = int(row[1])
@@ -31,14 +32,15 @@ with open(csvpath, "r") as pybank:
         if delta < decrease_delta:
             decrease_delta = delta
             month_name_dec = row[0]      
-
-    ave_pl_change = (sum_delta - first_pl) / months
+    first_pl_cut = first_pl[0]
+    print(first_pl_cut)
+    ave_pl_change = (sum_delta - int(first_pl_cut)) / (months - 1)
                   
 print("Financial Statement")
 print("----------------------------")
 print(f"Total Months: {months}")
 print(f"Total ${total_profit_loss}")
-print(f"Average Change: ${round(ave_pl_change)}")
+print(f"Average Change: ${round(ave_pl_change,2)}")
 print(f"Greatest Increase in Profits: {month_name_inc} (${increase_delta})")
 print(f"Greatest Decrease in Profits: {month_name_dec} (${decrease_delta})")
 
@@ -47,7 +49,7 @@ file.write("Financial Statement\n")
 file.write("----------------------------\n")
 file.write(f"Total Months: {months}\n")
 file.write(f"Total ${total_profit_loss}\n")
-file.write(f"Average Change: ${round(ave_pl_change)}\n")
+file.write(f"Average Change: ${round(ave_pl_change, 2)}\n")
 file.write(f"Greatest Increase in Profits: {month_name_inc} (${increase_delta})\n")
 file.write(f"Greatest Decrease in Profits: {month_name_dec} (${decrease_delta})\n")
 file.close()    
